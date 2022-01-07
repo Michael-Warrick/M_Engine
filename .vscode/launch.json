@@ -1,0 +1,30 @@
+{
+    "configurations": [
+    {
+        "name": "C++ Launch",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${workspaceFolder}/builds/mac/M_Engine",
+        "preLaunchTask": "build",
+        "args": [],
+        "stopAtEntry": false,
+        "cwd": "${fileDirname}",
+        "environment": [],
+        "externalConsole": false,
+        "osx": {
+            "program": "${workspaceFolder}/builds/mac/M_Engine",
+            "MIMode": "lldb"
+        },
+        "windows": {
+            "program": "${workspaceFolder}/builds/windows/M_Engine",
+            "MIMode": "gdb",
+            "miDebuggerPath": "C:\\MinGw\\bin\\gdb.exe"
+        },
+        "linux": {
+            "program": "${workspaceFolder}/builds/linux/M_Engine",
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb"
+        }
+    }
+    ]
+}
