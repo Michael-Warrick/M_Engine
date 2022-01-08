@@ -11,7 +11,7 @@
                 "args": [
                     "-g",
                     "--std=c++11",
-                    "main.cpp",
+                    "code/main.cpp",
                     "-o",
                     "builds/mac/M_Engine"
                 ]
@@ -20,7 +20,7 @@
                 "args": [
                     "-g",
                     "--std=c++11",
-                    "main.cpp",
+                    "code/main.cpp",
                     "-o",
                     "builds/windows/M_Engine"
                 ]
@@ -29,7 +29,7 @@
                 "args": [
                     "-g",
                     "--std=c++11",
-                    "main.cpp",
+                    "code/main.cpp",
                     "-o",
                     "builds/linux/M_Engine"
                 ]
