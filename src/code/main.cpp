@@ -1,5 +1,4 @@
 #include "../headers/display.hpp"
-#include "../headers/fpsCounter.h"
 
 int main()
 {
