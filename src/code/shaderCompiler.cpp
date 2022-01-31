@@ -1,4 +1,4 @@
-#include "shaderCompiler.hpp"
+#include "../headers/shaderCompiler.hpp"
 
 void ShaderCompiler::LoadShaders(const GLchar* vertexPath, const GLchar* fragmentPath)
 {

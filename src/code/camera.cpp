@@ -1,4 +1,4 @@
-#include "camera.hpp"
+#include "../headers/camera.hpp"
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
@@ -7,7 +7,6 @@ void Camera::CameraInit(GLuint shaderProgram, GLFWwindow* window)
 {
     // ModelViewProjection Uniform Handle
     matrixID = glGetUniformLocation(shaderProgram, "MVP");
-    //UITextShaderID = glGetUniformLocation(fontShaderProgram, "textProjection");
 
     cameraFOV = 90.0f;
     aspectRatio = (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT;
@@ -38,8 +37,6 @@ void Camera::CameraUpdate(GLFWwindow* window)
     // Projection Matrix (Perspective)
     projection = perspective(radians(cameraFOV), aspectRatio, nearClipPlane, farClipPlane);
 
-    //textProjection = ortho(0.0f, (float)SCREEN_WIDTH, 0.0f, (float)SCREEN_HEIGHT);
-
     // Camera Matrix
     view = lookAt(cameraPosition, cameraPosition + cameraFront, worldUp);
 
@@ -58,11 +55,7 @@ void Camera::ProcessKeyboardInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
     {
         movementSpeed = movementSpeed * 2.0f;
-
         cameraFOV = 110.0f;
-
-        // Some pretty cool camera shake there...
-        // cameraFOV = mMath.Lerp(90.0f, 110.0f, 100.0f * deltaTime);
     }
 
     else if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_RELEASE)
@@ -111,8 +104,6 @@ void Camera::ProcessKeyboardInput(GLFWwindow* window)
     {
         cameraFOV = 45.0f;
     }
-
-
 }
 
 void Camera::ProcessMouseMovement(double xoffset, double yoffset, GLboolean constrainPitch)

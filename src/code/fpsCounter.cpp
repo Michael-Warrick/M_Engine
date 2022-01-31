@@ -1,4 +1,4 @@
-#include "fpsCounter.h"
+#include "../headers/fpsCounter.h"
 
 void FPS_Counter::FPS_Counter_Init()
 {
@@ -34,4 +34,9 @@ void FPS_Counter::FPS_Calculate_FramesPerSecond(double msPerFrame)
     // Converts ms/frame to frames/second
     framesPerSecond = 1 / (msPerFrame / 1000.0);
     std::cout << framesPerSecond << " FPS";
+}
+
+void FPS_Counter::FPS_Counter_Destroy()
+{
+    FPS_Counter::~FPS_Counter();
 }

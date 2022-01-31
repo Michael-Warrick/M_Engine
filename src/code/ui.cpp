@@ -1,6 +1,4 @@
-#include "ui.hpp"
-
-UIView view;
+#include "../headers/ui.hpp"
 
 void UI::Init(GLFWwindow *window) 
 {
@@ -18,7 +16,7 @@ void UI::Init(GLFWwindow *window)
         - Figure out what this all means...
     */
 
-    float globalScaleFactor = 2.0f;
+    float globalScaleFactor = 1.0f;
     ImFontConfig fontConfig;
     fontConfig.SizePixels = 13 * globalScaleFactor;
     ImGui::GetIO().Fonts->AddFontDefault(&fontConfig)->FontSize = globalScaleFactor;
@@ -34,10 +32,6 @@ void UI::Prepare()
 
 void UI::Render() 
 {
-    //ImGui::ShowDemoWindow();
-
-    //view.NavigationBar();
-
     if (ImGui::BeginMainMenuBar())
     {
         if (ImGui::BeginMenu("File"))

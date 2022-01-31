@@ -10,17 +10,36 @@
             "osx": {
                 "args": [
                     "-g",
-                    "--std=c++11",
-                    "code/main.cpp",
+                    "--std=c++17",
+                    "-stdlib=libc++",
+                    "\"${workspaceFolder}\"/src/code/*.cpp", // Regular source files compilation...
+                    "\"${workspaceFolder}\"/src/ui/ImGui/*.cpp", // Adds all ImGui files for compilation...
                     "-o",
-                    "builds/mac/M_Engine"
+                    "builds/mac/M_Engine",
+
+                    "-framework",
+                    "OpenGL",
+
+                    /* Include Paths */
+                    "-I${workspaceFolder}/dependencies/mac/include/GLEW",
+                    "-I${workspaceFolder}/dependencies/mac/include/GLFW",
+                    "-I${workspaceFolder}/dependencies/mac/include/GLM",
+                    "-I${workspaceFolder}/UI/ImGui/imgui.h",
+
+                    /* Library Paths */
+                    "-L${workspaceFolder}/dependencies/mac/lib/GLEW",
+                    "-L${workspaceFolder}/dependencies/mac/lib/GLFW",
+
+                    /* Libraries */
+                    "-lGLEW",
+                    "-lGLFW",
                 ]
             },
             "windows": {
                 "args": [
                     "-g",
                     "--std=c++11",
-                    "code/main.cpp",
+                    "src/code/main.cpp",
                     "-o",
                     "builds/windows/M_Engine"
                 ]
@@ -29,7 +48,7 @@
                 "args": [
                     "-g",
                     "--std=c++11",
-                    "code/main.cpp",
+                    "src/code/main.cpp",
                     "-o",
                     "builds/linux/M_Engine"
                 ]

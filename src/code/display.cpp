@@ -1,8 +1,10 @@
-#include "display.hpp"
+#include "../headers/display.hpp"
+#include "../headers/fpsCounter.h"
 
 Camera cam;
 ShaderCompiler shader;
 UI ui;
+FPS_Counter fpsCounter;
 
 void MouseCallback(GLFWwindow* window, double xpos, double ypos);
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -20,25 +22,23 @@ void setOpenGLVersion(int majorContext, int minorContext)
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 }
 
-string setWindowTitle(string engineName, string platformName, string systemArchitecture) 
+string setWindowTitle(string engineName) 
 {
-    std::string title = engineName + " " + platformName + " " + systemArchitecture + "-Bit";
+    std::string title = engineName + " - " + PLATFORM_NAME;
     return title;
 }
 
 void Display::Init()
 {
     // MADE THIS RELATIVE WOOOOOO
-    shader.LoadShaders("../../M_Engine/M_Engine/src/shaders/cube.vert", "../../M_Engine/M_Engine/src/shaders/cube.frag");
+    shader.LoadShaders("../shaders/cube.vert", "../shaders/cube.frag");
     
     glfwInit();
     setOpenGLVersion(4, 1);
-
-    // Required for macOS, good for cross-platform dev
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);     // Required for macOS, good for cross-platform dev
     glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
     
-    string title = setWindowTitle("M_Engine", "Windows 11", "64");
+    string title = setWindowTitle("M_Engine");
     const char* windowTitle = title.c_str();
 
     window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, windowTitle, nullptr, nullptr);
@@ -57,48 +57,32 @@ void Display::Init()
     }
 
     glfwMakeContextCurrent(window);
-
+    glfwSetWindowSizeCallback(window, WindowResizeCallback);
     glfwSetCursorPosCallback(window, MouseCallback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
     glfwSetKeyCallback(window, keyCallback);
-
-    glfwSetWindowSizeCallback(window, WindowResizeCallback);
 
     // 0 Disables V-SYNC, 1 Enables V-SYNC
     glfwSwapInterval(0);
 
     glewExperimental = GL_TRUE;
 
-    // We check if GLEW is initialised
     if (GLEW_OK != glewInit())
     {
         std::cout << "Problem Initialising GLEW" << std::endl;
     }
 
-    // Sets our OpenGL viewport to be the center of our screen
     glViewport(0, 0, retinaScreenWidth, retinaScreenHeight);
 
-    // Maya blue background colour
     glClearColor(0.45f, 0.76f, 0.98f, 1.0f);
 
     glEnable(GL_BLEND | GL_DEPTH_TEST);
-
     // Accept fragment if it closer to the camera than the former one
     glDepthFunc(GL_LESS);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    // Cull backfaces (improves performance + reminds me of the "badger incident")
     glEnable(GL_CULL_FACE);
 
-    //text.CompileFontShader();
     shader.CompileShaders();
-
-    // -----------------------------------------
-    //
-    //    DRAWING THE CUBE
-    //
-    // -----------------------------------------
 
     // Generates our vertex arrays and buffers
     glGenVertexArrays(1, &vertexArrayObject);
@@ -198,6 +182,7 @@ void Display::Init()
     cam.CameraInit(shader.shaderProgram, window);
 
     ui.Init(window);
+    fpsCounter.FPS_Counter_Init();
 }
 
 void Display::PrepareFrame()
@@ -217,28 +202,11 @@ void Display::PrepareFrame()
 
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 
-    //Creating the vertex pointer and enabling the vertex array
-    glVertexAttribPointer(0,                    // Attribute. No particular reason for 0, but must match the layout in the shader.
-        3,                    // Size
-        GL_FLOAT,             // Type
-        GL_FALSE,             // Normalised?
-        3 * sizeof(GLfloat),  // Stride
-        (GLvoid*)0);        // Array buffer offset
-
-
-    // 2nd attribute buffer : colors
     glEnableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
-
-    glVertexAttribPointer(
-        1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
-        3,                                // size
-        GL_FLOAT,                         // type
-        GL_FALSE,                         // normalized?
-        0,                                // stride
-        (void*)0                          // array buffer offset
-    );
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
     // Starts drawing a triangle at position[0] and with 3 vertices
     glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
@@ -247,6 +215,7 @@ void Display::PrepareFrame()
     glDisableVertexAttribArray(1);
 
     ui.Render();
+    fpsCounter.FPS_Counter_Update();
 }
 
 void Display::NextFrame()
@@ -265,6 +234,7 @@ void Display::Cleanup()
     glDeleteVertexArrays(1, &vertexArrayObject);
 
     ui.Destroy();
+    fpsCounter.FPS_Counter_Destroy();
 
     glfwTerminate();
 }
