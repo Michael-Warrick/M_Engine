@@ -1,6 +1,6 @@
 #include "../headers/display.hpp"
 
-int main()
+int main(void)
 {
     Display display;
     display.Init();

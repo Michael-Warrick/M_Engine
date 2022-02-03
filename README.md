@@ -30,11 +30,18 @@ xcode-select --install
 **Windows:**\
 https://www.mingw-w64.org/
 
-**Linux - Debian and Ubuntu 14.04+:** 
+**Linux:**
+If you're running the latest version of either Ubuntu or Debian, you should already have the GCC compiler installed on your system seeing as most Linux kernals are written in C/C++. If not, here are the commands to do so.
+
 ```shell
-sudo apt-get install g++ -y
+sudo apt-get update
 ```
-Now would be a good time to check if your platform specific compiler compiles just a simple `main.cpp` file. If everything is going smoothly so far, great! If not, consult Stackoverflow / Reddit.
+```shell
+sudo apt install build-essential
+```
+```shell
+gcc --version
+```
 
 ### Cloning the repository
 To get the project running on your machine either download it as a `.zip` and extract it or just:

@@ -14,6 +14,7 @@
                     "-stdlib=libc++",
                     "\"${workspaceFolder}\"/src/code/*.cpp", // Regular source files compilation...
                     "\"${workspaceFolder}\"/src/ui/ImGui/*.cpp", // Adds all ImGui files for compilation...
+                    //"-v",
                     "-o",
                     "builds/mac/M_Engine",
 

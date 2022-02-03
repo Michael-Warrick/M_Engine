@@ -5,13 +5,14 @@ class UI
 public:
 	void Init(GLFWwindow* window);
 	void Prepare();
+	void MenuBar();
+	void SceneView();
 	void Render();
 	void Destroy();
 private:
-	void MenuBar();
-	void SceneView();
 	void HierarchyView();
 	void AssetBrowser();
 	void FileManager();
 	void Inspector();
 };
+

@@ -9,8 +9,9 @@ FPS_Counter fpsCounter;
 void MouseCallback(GLFWwindow* window, double xpos, double ypos);
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void WindowResizeCallback(GLFWwindow* window, int width, int height);
+void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
 
-bool isPaused = false;
+bool isPaused = true;
 
 void setOpenGLVersion(int majorContext, int minorContext) 
 {
@@ -57,13 +58,14 @@ void Display::Init()
     }
 
     glfwMakeContextCurrent(window);
-    glfwSetWindowSizeCallback(window, WindowResizeCallback);
+    
     glfwSetCursorPosCallback(window, MouseCallback);
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    glfwSetMouseButtonCallback(window, MouseButtonCallback);
     glfwSetKeyCallback(window, keyCallback);
 
     // 0 Disables V-SYNC, 1 Enables V-SYNC
-    glfwSwapInterval(0);
+    glfwSwapInterval(1);
 
     glewExperimental = GL_TRUE;
 
@@ -84,10 +86,24 @@ void Display::Init()
 
     shader.CompileShaders();
 
-    // Generates our vertex arrays and buffers
-    glGenVertexArrays(1, &vertexArrayObject);
+    // glGenFramebuffers(1, &frameBufferObject);
+    // glBindFramebuffer(GL_FRAMEBUFFER, frameBufferObject);
+    
+    // glGenTextures(1, &frameBufferTexture);
+    // glBindTexture(GL_TEXTURE_2D, frameBufferTexture);
+    // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 512, 512, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
-    // Binding the vertexArrayObject + Setting vertex buffers
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    // glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, frameBufferTexture, 0);
+
+    // glGenRenderbuffers(1, &depthRenderObject);
+    // glBindRenderbuffer(GL_RENDERBUFFER, depthRenderObject);
+    // glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 512, 512);
+    // glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRenderObject);
+
+    glGenVertexArrays(1, &vertexArrayObject);
     glBindVertexArray(vertexArrayObject);
 
     // Our shape's vertices
@@ -261,24 +277,24 @@ void MouseCallback(GLFWwindow* window, double xpos, double ypos)
     }
 }
 
+void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) 
+{
+    if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+    {
+        isPaused = false;
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
+
+    if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
+    {
+        isPaused = true;
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
+}
+
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-    {
-        isPaused = !isPaused;
-
-        // Pausing
-        if (isPaused)
-        {
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-        }
-
-        // Resuming
-        if (!isPaused)
-        {
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-        }
-    }
+    
 }
 
 void WindowResizeCallback(GLFWwindow* window, int width, int height) 
