@@ -30,7 +30,7 @@ xcode-select --install
 **Windows:**\
 https://www.mingw-w64.org/
 
-**Linux:**
+**Linux:**\
 If you're running the latest version of either Ubuntu or Debian, you should already have the GCC compiler installed on your system seeing as most Linux kernals are written in C/C++. If not, here are the commands to do so.
 
 ```shell
