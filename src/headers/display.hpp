@@ -21,6 +21,4 @@ public:
     GLuint frameBufferObject;
     GLuint frameBufferTexture;
     GLuint depthRenderObject;
-
-    bool vsyncEnabled = false;
 };

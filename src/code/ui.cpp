@@ -106,7 +106,7 @@ void UI::SceneView()
     {
         ImGui::BeginChild("SceneRenderer");
         ImVec2 viewportSize = ImGui::GetWindowSize();
-        // ImGui::Image((ImTextureID)display.frameBufferTexture, viewportSize, ImVec2(0, 1), ImVec2(1, 0));
+        ImGui::Image(reinterpret_cast<void*>(framebufferTextureID), viewportSize, ImVec2(0, 1), ImVec2(1, 0));
         ImGui::EndChild();
     }
 }

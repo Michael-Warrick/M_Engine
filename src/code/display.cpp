@@ -86,23 +86,6 @@ void Display::Init()
 
     shader.CompileShaders();
 
-    // glGenFramebuffers(1, &frameBufferObject);
-    // glBindFramebuffer(GL_FRAMEBUFFER, frameBufferObject);
-    
-    // glGenTextures(1, &frameBufferTexture);
-    // glBindTexture(GL_TEXTURE_2D, frameBufferTexture);
-    // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 512, 512, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-
-    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-    // glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, frameBufferTexture, 0);
-
-    // glGenRenderbuffers(1, &depthRenderObject);
-    // glBindRenderbuffer(GL_RENDERBUFFER, depthRenderObject);
-    // glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 512, 512);
-    // glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRenderObject);
-
     glGenVertexArrays(1, &vertexArrayObject);
     glBindVertexArray(vertexArrayObject);
 
@@ -204,13 +187,7 @@ void Display::Init()
 void Display::PrepareFrame()
 {
     ui.Prepare();
-
     cam.CameraUpdate(window);
-
-    if (!isPaused)
-    {
-        cam.ProcessKeyboardInput(window);
-    }
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -232,6 +209,11 @@ void Display::PrepareFrame()
 
     ui.Render();
     fpsCounter.FPS_Counter_Update();
+
+    if (!isPaused)
+    {
+        cam.ProcessKeyboardInput(window);
+    }
 }
 
 void Display::NextFrame()

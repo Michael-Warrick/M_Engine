@@ -9,6 +9,8 @@ public:
 	void SceneView();
 	void Render();
 	void Destroy();
+
+	uint64_t framebufferTextureID;
 private:
 	void HierarchyView();
 	void AssetBrowser();
