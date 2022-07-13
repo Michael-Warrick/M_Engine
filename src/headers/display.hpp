@@ -14,11 +14,12 @@ public:
 
     GLFWwindow* window = nullptr;
 
+    // macOS Retina Display fix
+    // Also will help with higher res displays in general
+    int retinaScreenWidth;
+    int retinaScreenHeight;
+
     GLuint vertexBufferObject;
     GLuint vertexArrayObject;
-    GLuint colorBuffer;
-
-    GLuint frameBufferObject;
-    GLuint frameBufferTexture;
-    GLuint depthRenderObject;
+    unsigned int colorBuffer;
 };

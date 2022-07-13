@@ -1,5 +1,11 @@
 #include "../headers/ui.hpp"
 
+std::string Shortcutter(std::string input)
+{
+    std::string shortcut = PLATFORM_SUPERKEY + std::string("+") + input;
+    return shortcut;
+}
+
 void UI::Init(GLFWwindow* window)
 {
     IMGUI_CHECKVERSION();
@@ -10,14 +16,14 @@ void UI::Init(GLFWwindow* window)
     ImGui_ImplOpenGL3_Init("#version 410");
 
     // Loading a really nice, clean looking font.
-    io.Fonts->AddFontFromFileTTF("../UI/resources/Work Sans/WorkSans-Regular.ttf", 18.0f);
+    io.Fonts->AddFontFromFileTTF("../UI/resources/Work Sans/WorkSans-Regular.ttf", 16.0f);
     /**
         LITERAL BLACK MAGIC
         - Scales UI based on DPI/random scale factor...
         - Have no clue what 13 is meant to represent but it works...(font size maybe??)
         - Figure out what this all means...
     */
-    float globalScaleFactor = 1.5f;
+    float globalScaleFactor = 1.3f;
     ImFontConfig fontConfig;
     fontConfig.SizePixels = 13 * globalScaleFactor;
     ImGui::GetIO().Fonts->AddFontDefault(&fontConfig)->FontSize = globalScaleFactor;
@@ -73,12 +79,16 @@ void UI::MenuBar()
         }
         if (ImGui::BeginMenu("Project"))
         {
-
+            if (ImGui::MenuItem("Project Settings", "CTRL+K")) {}
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("Scene"))
         {
+            if (ImGui::MenuItem("Scene Settings", "CTRL+O")) 
+            {
 
+            }
+            
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("GameObject"))
@@ -93,32 +103,41 @@ void UI::MenuBar()
         }
         if (ImGui::BeginMenu("Help"))
         {
-
+            if (ImGui::MenuItem("Online Documentation", "CTRL+I")) {}
             ImGui::EndMenu();
         }
         ImGui::EndMainMenuBar();
     }
 }
 
-void UI::SceneView()
-{
-    ImGui::Begin("SceneWindow"); 
-    {
-        ImGui::BeginChild("SceneRenderer");
-        ImVec2 viewportSize = ImGui::GetWindowSize();
-        ImGui::Image(reinterpret_cast<void*>(framebufferTextureID), viewportSize, ImVec2(0, 1), ImVec2(1, 0));
-        ImGui::EndChild();
-    }
-}
-
-void UI::Render()
+void UI::SceneView(unsigned int colorBuffer)
 {
     ImGui::ShowDemoWindow();
 
+    ImGui::Begin("Scene");
+    {
+        ImGui::BeginChild("Renderer Viewport");
+
+        ImGui::Text("Scene View");
+
+		ImVec2 pos = ImGui::GetCursorScreenPos();
+        ImVec2 windowSize = ImGui::GetWindowSize();
+
+		ImGui::GetWindowDrawList()->AddImage(
+            (ImTextureID)(intptr_t)colorBuffer, 
+            ImVec2(pos), ImVec2(pos.x + windowSize.x, pos.y + windowSize.y), 
+            ImVec2(-1, 0), ImVec2(0, 1));
+
+        ImGui::EndChild();
+        ImGui::End();
+    }
+}
+
+void UI::Render(unsigned int colorBuffer)
+{
     UI::MenuBar();
-    UI::SceneView();
+    UI::SceneView(colorBuffer);
     
-    ImGui::End();
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }

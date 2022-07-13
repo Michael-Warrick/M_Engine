@@ -1,10 +1,11 @@
 #include "../headers/display.hpp"
-#include "../headers/fpsCounter.h"
+#include "../headers/framebuffer.hpp"
 
 Camera cam;
 ShaderCompiler shader;
 UI ui;
-FPS_Counter fpsCounter;
+Framebuffer framebuffer;
+
 
 void MouseCallback(GLFWwindow* window, double xpos, double ypos);
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -44,11 +45,8 @@ void Display::Init()
 
     window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, windowTitle, nullptr, nullptr);
 
-    // macOS Retina Display fix
-    // Also will help with higher res displays in general
-    int retinaScreenWidth;
-    int retinaScreenHeight;
     glfwGetFramebufferSize(window, &retinaScreenWidth, &retinaScreenHeight);
+    glfwSetFramebufferSizeCallback(window, WindowResizeCallback);
 
     // Checks to see if our window hasn't been created and if not terminates GLFW
     if (nullptr == window)
@@ -76,10 +74,9 @@ void Display::Init()
 
     glViewport(0, 0, retinaScreenWidth, retinaScreenHeight);
 
-    glClearColor(0.45f, 0.76f, 0.98f, 1.0f);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     glEnable(GL_BLEND | GL_DEPTH_TEST);
-    // Accept fragment if it closer to the camera than the former one
     glDepthFunc(GL_LESS);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_CULL_FACE);
@@ -178,20 +175,28 @@ void Display::Init()
     glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(colorData), colorData, GL_STATIC_DRAW);
 
-    cam.CameraInit(shader.shaderProgram, window);
-
+    cam.CameraInit(shader.GetShaderID(), window);
     ui.Init(window);
-    fpsCounter.FPS_Counter_Init();
+
+    framebuffer.CreateBuffer();
 }
 
 void Display::PrepareFrame()
 {
+    if (!isPaused)
+    {
+        cam.ProcessKeyboardInput(window);
+    }
+
     ui.Prepare();
     cam.CameraUpdate(window);
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    framebuffer.BindBuffer();
+    framebuffer.ClearBuffer();
+    
+    framebuffer.BindTexture(framebuffer.GetColourTexture());
 
-    glUseProgram(shader.shaderProgram);
+    shader.Run();
 
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
@@ -204,16 +209,15 @@ void Display::PrepareFrame()
     // Starts drawing a triangle at position[0] and with 3 vertices
     glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
 
+    ui.Render(framebuffer.colourTexture);
+
     glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(1); 
 
-    ui.Render();
-    fpsCounter.FPS_Counter_Update();
 
-    if (!isPaused)
-    {
-        cam.ProcessKeyboardInput(window);
-    }
+    
+    framebuffer.UnbindBuffer();
+    framebuffer.DeleteBuffer();    
 }
 
 void Display::NextFrame()
@@ -226,14 +230,12 @@ void Display::Cleanup()
 {
     glDeleteBuffers(1, &vertexBufferObject);
     glDeleteBuffers(1, &colorBuffer);
-    glDeleteProgram(shader.shaderProgram);
+    shader.Delete();
 
     // Deallocating our vertex array
     glDeleteVertexArrays(1, &vertexArrayObject);
 
     ui.Destroy();
-    fpsCounter.FPS_Counter_Destroy();
-
     glfwTerminate();
 }
 

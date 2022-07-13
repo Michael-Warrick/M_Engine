@@ -5,13 +5,14 @@ class UI
 public:
 	void Init(GLFWwindow* window);
 	void Prepare();
-	void MenuBar();
-	void SceneView();
-	void Render();
+	void Render(unsigned int colorBuffer);
 	void Destroy();
 
-	uint64_t framebufferTextureID;
 private:
+	string Shortcutter(string shortcut);
+	
+	void MenuBar();
+	void SceneView(unsigned int colorBuffer);
 	void HierarchyView();
 	void AssetBrowser();
 	void FileManager();
