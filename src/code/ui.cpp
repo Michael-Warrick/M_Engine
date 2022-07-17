@@ -110,33 +110,34 @@ void UI::MenuBar()
     }
 }
 
-void UI::SceneView(unsigned int colorBuffer)
+void UI::SceneView(GLuint colorTextureID)
 {
-    ImGui::ShowDemoWindow();
+    // ImGui::ShowDemoWindow();
 
     ImGui::Begin("Scene");
     {
         ImGui::BeginChild("Renderer Viewport");
 
         ImGui::Text("Scene View");
+        ImGui::Text(("colorTextureID Value: " + to_string(colorTextureID)).c_str());
 
 		ImVec2 pos = ImGui::GetCursorScreenPos();
         ImVec2 windowSize = ImGui::GetWindowSize();
 
 		ImGui::GetWindowDrawList()->AddImage(
-            (ImTextureID)(intptr_t)colorBuffer, 
+            (ImTextureID)1, 
             ImVec2(pos), ImVec2(pos.x + windowSize.x, pos.y + windowSize.y), 
             ImVec2(-1, 0), ImVec2(0, 1));
-
+            
         ImGui::EndChild();
         ImGui::End();
     }
 }
 
-void UI::Render(unsigned int colorBuffer)
+void UI::Render(GLuint colorTextureID)
 {
     UI::MenuBar();
-    UI::SceneView(colorBuffer);
+    UI::SceneView(colorTextureID);
     
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

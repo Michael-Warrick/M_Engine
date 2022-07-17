@@ -7,15 +7,12 @@ public:
     void DeleteBuffer();
     void ClearBuffer();
     void BindBuffer();
-    void BindTexture(unsigned int texture);
+    void BindTexture();
     void UnbindBuffer();
-    unsigned int GetColourTexture();
+    GLuint GetColourTexture();
     
-    unsigned int framebufferObject;
-    unsigned int colourTexture;
-    unsigned int depthTexture;
-    unsigned int depthBuffer;
-    
-    int viewportWidth = 0;
-    int viewportHeight = 0;
+    GLuint framebufferObject;
+    GLuint colourTexture;
+    GLuint depthTexture;
+    GLuint depthBuffer;
 };

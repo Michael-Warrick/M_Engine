@@ -193,8 +193,6 @@ void Display::PrepareFrame()
 
     framebuffer.BindBuffer();
     framebuffer.ClearBuffer();
-    
-    framebuffer.BindTexture(framebuffer.GetColourTexture());
 
     shader.Run();
 
@@ -209,12 +207,11 @@ void Display::PrepareFrame()
     // Starts drawing a triangle at position[0] and with 3 vertices
     glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
 
+    framebuffer.BindTexture();
     ui.Render(framebuffer.colourTexture);
 
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1); 
-
-
     
     framebuffer.UnbindBuffer();
     framebuffer.DeleteBuffer();    

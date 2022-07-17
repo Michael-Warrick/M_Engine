@@ -41,9 +41,10 @@ void Framebuffer::BindBuffer()
     glBindFramebuffer(GL_FRAMEBUFFER, framebufferObject);
 }
 
-void Framebuffer::BindTexture(unsigned int texture)
+void Framebuffer::BindTexture()
 {
-    glBindTexture(GL_TEXTURE_2D, texture);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, colourTexture);
 }
 
 unsigned int Framebuffer::GetColourTexture()

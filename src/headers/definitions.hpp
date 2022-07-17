@@ -28,6 +28,11 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+// // Third-party image loader
+// #define STB_IMAGE_IMPLEMENTATION
+// #include "../headers/thirdparty/stb_image.h"
+
 using namespace glm;
 using namespace std;
 
